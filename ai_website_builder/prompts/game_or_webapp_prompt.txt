@@ -1,0 +1,1 @@
+Create a small web-based game called 'tick tack toe' using HTML, CSS, and JavaScript. Include features like: restart button. Use a simple design approach. Return only the HTML, CSS, and JavaScript code in separate code blocks without any explanation, description, or comments.

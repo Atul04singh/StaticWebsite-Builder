@@ -1,0 +1,1 @@
+Create a responsive web application for 'to do list' using HTML, CSS, and JavaScript. Include features like:give option to dinamically add muntiple items and delete each items . Return only the HTML, CSS, and JavaScript code in separate code blocks without any explanation, description, or comments.
