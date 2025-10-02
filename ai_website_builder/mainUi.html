@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Generator UI</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      form {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+      }
+
+      label {
+        font-weight: bold;
+        margin-top: 1rem;
+        display: block;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.6rem;
+        margin-top: 0.4rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        padding: 0.75rem 1rem;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 0.25rem;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      #loader {
+        margin-top: 1rem;
+        font-size: 1rem;
+        color: #555;
+        display: none;
+      }
+
+      iframe {
+        margin-top: 1rem;
+        border: 2px solid #aaa;
+        border-radius: 8px;
+        background: white;
+        transition: width 0.3s ease, height 0.3s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="websiteForm">
+      <h2>🚀 Generate a Website</h2>
+
+      <label for="choice">Choice:</label>
+      <select name="choice" id="choice" required>
+        <option value="1">1 - AI Website (Structure Only)</option>
+        <option value="2">2 - Ready-made Template</option>
+        <option value="3">3 - Simple Web App/Game</option>
+      </select>
+
+      <label for="website_type">Website Type:</label>
+      <input
+        type="text"
+        name="website_type"
+        id="website_type"
+        placeholder="e.g., Portfolio, Furniture"
+      />
+
+      <label for="tone">Tone/Style:</label>
+      <input
+        type="text"
+        name="tone"
+        id="tone"
+        placeholder="e.g., Clean and modern"
+      />
+
+      <button type="submit">🚀 Launch</button>
+      <div id="loader">⏳ Generating website... please wait.</div>
+    </form>
+
+    <!-- Live Preview Section -->
+    <section id="previewSection" style="margin-top: 2rem; text-align: center">
+      <h3 style="margin-bottom: 1rem; color: #333">🔍 Live Website Preview</h3>
+
+      <!-- Device View Buttons -->
+      <div style="margin-bottom: 1rem">
+        <button type="button" onclick="setDeviceView('mobile')">
+          📱 Mobile
+        </button>
+        <button type="button" onclick="setDeviceView('tablet')">
+          📱 Tablet
+        </button>
+        <button type="button" onclick="setDeviceView('desktop')">
+          🖥️ Desktop
+        </button>
+      </div>
+
+      <!-- Iframe Preview -->
+      <iframe
+        id="previewFrame"
+        src="/output/index.html"
+        style="width: 1000px; height: 600px"
+      ></iframe>
+    </section>
+
+    <script>
+      const form = document.getElementById("websiteForm");
+      const loader = document.getElementById("loader");
+      const previewFrame = document.getElementById("previewFrame");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        loader.style.display = "block";
+
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch("http://127.0.0.1:8000/launch/", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            loader.innerText = "✅ Website generated! Previewing below...";
+            setTimeout(() => {
+              loader.style.display = "none";
+              previewFrame.src = "/output/index.html";
+            }, 1000);
+          } else {
+            const data = await response.json();
+            loader.innerText = "❌ Error: " + (data.error || "Unknown");
+          }
+        } catch (err) {
+          loader.innerText = "❌ Network error or API not running.";
+        }
+      });
+
+      function setDeviceView(device) {
+        if (device === "mobile") {
+          previewFrame.style.width = "375px";
+          previewFrame.style.height = "667px";
+        } else if (device === "tablet") {
+          previewFrame.style.width = "768px";
+          previewFrame.style.height = "1024px";
+        } else {
+          previewFrame.style.width = "1000px";
+          previewFrame.style.height = "600px";
+        }
+      }
+    </script>
+  </body>
+</html>
